@@ -1,0 +1,1 @@
+This will be an app for people with hemophilia to allow users to log bleeds, infusions, and connect with others that are experiencing the same. The goal of this app to allow information to be accessable in a semi-formal capacity and to allow users to give more empathetic advice to others
