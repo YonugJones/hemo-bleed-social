@@ -13,7 +13,7 @@ const LandingPage = () => {
       <div className='flex gap-5'>
         <Link to='/signup'>
           <button className='bg-[var(--green)] hover:bg-[var(--light-green)] text-white font-semibold py-2 px-4 rounded shadow cursor-pointer'>
-            Create an account
+            Create your account
           </button>
         </Link>
         <Link to='/login'>
