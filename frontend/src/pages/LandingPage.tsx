@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
   return (
-    <main className='flex flex-col justify-center items-center h-screen'>
+    <>
       <div className='flex items-center text-[var(--green)] gap-5 mb-5'>
         <img src='https://placehold.co/60' alt='Hemo Bleed Social Logo' />
         <div className='flex flex-col justify-center items-center'>
@@ -22,7 +22,7 @@ const LandingPage = () => {
           </button>
         </Link>
       </div>
-    </main>
+    </>
   )
 }
 
