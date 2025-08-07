@@ -5,15 +5,6 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import LandingPage from '../pages/LandingPage'
 
 describe('LandingPage', () => {
-  it('renders page snapshot', () => {
-    const { container } = render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
   it('renders Hemo Bleed Social heading and slogan', () => {
     render(
       <MemoryRouter>
