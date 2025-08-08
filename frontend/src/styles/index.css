@@ -18,3 +18,18 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+input:focus {
+  outline: none; 
+  box-shadow: inset 0px 0px 0px 1px var(--light-green);
+}
+
+button:focus, button:hover {
+  outline: none;
+  background-color: var(--light-green);
+}
+
+a:focus, a:hover {
+  outline: none;
+  color: var(--light-green);
+}
