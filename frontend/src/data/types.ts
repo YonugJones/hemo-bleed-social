@@ -4,40 +4,30 @@ export interface User {
   lastName?: string
   username: string
   email: string
-  phoneNumber?: string
-  createdAt?: Date
-  updatedAt?: Date
-  location?: string
-  role?: string
   profilePic?: string
-  birthday?: Date
-  bleeds?: Bleed[]
   infusions?: Infusion[]
-}
-
-export interface Bleed {
-  id: number
-  bodyPart: string
-  severity: 'mild' | 'moderate' | 'severe'
-  status?: 'active' | 'resolved' | 'ongoing'
-  dosage: string
-  date: Date
-  durationInDays: number
-  reportedBy: string
-  photos?: string[]
-  notes?: string
-  treatmentGiven?: string
-  infusion?: Infusion
+  bleeds?: Bleed[]
 }
 
 export interface Infusion {
   id: number
-  date: Date
-  bleedTreatment: boolean
+  userId: number
+  location: string
+  dosage: number
   medication: string
-  dosageAmount?: number
-  administrationMethod?: string
-  location?: string
-  sideEffects?: string
+  date: Date
   notes?: string
+  bleedId?: number
+}
+
+export interface Bleed {
+  id: number
+  userId: number
+  location: string
+  severity: 'mild' | 'moderate' | 'severe'
+  notes?: string
+  isActive: boolean
+  infusionId?: number
+  didPhysicalTherapy?: boolean
+  physicalTherapy?: string
 }
