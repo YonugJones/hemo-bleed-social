@@ -1,18 +1,15 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import {
-  faCheck,
-  faTimes,
-  faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons'
-import {
   USERNAME_REGEX,
   EMAIL_REGEX,
   PASSWORD_REGEX,
-  specialChars,
 } from '../utils/validation'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
-import { type SignupProps } from '../types/auth'
+import { type SignupFormData } from '../types/auth'
+
+type SignupProps = {
+  onSubmit?: (signupData: SignupFormData) => void | Promise<void>
+}
 
 const Signup = ({ onSubmit }: SignupProps) => {
   const [username, setUsername] = useState<string>('')
@@ -76,7 +73,7 @@ const Signup = ({ onSubmit }: SignupProps) => {
   }
 
   return (
-    <div>
+    <>
       {/* SUCCESS MSG */}
       {success ? (
         <section>
@@ -87,140 +84,62 @@ const Signup = ({ onSubmit }: SignupProps) => {
         // FORM CONTAINER
         <section>
           <p className={errMsg ? 'errMsg' : 'offscreen'}>{errMsg}</p>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <h1>Create a new account!</h1>
-              <p>It&apos;s quick and easy.</p>
+          <form
+            onSubmit={handleSubmit}
+            className='flex flex-col items-center gap-y-4 w-full max-w-md mx-auto'
+          >
+            <div className='flex flex-col sm:flex-col md:flex-row gap-y-1 md:gap-y-0'>
+              {/* USERNAME */}
+              <input
+                className='input:focus sm:w-[15vw] px-4 py-1 border inset-shadow-2xs border-gray-200 focus:inset-shadow-[var(--green)] rounded-full text-center text-xs mx-1'
+                type='text'
+                id='username'
+                autoComplete='off'
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                placeholder='Username'
+                required
+              />
+
+              {/* EMAIL */}
+              <input
+                className='sm:w-[15vw] px-4 py-1 border inset-shadow-2xs border-gray-200 rounded-full text-center text-xs mx-1'
+                type='email'
+                id='email'
+                autoComplete='off'
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                placeholder='Email'
+                required
+              />
+
+              {/* PASSWORD */}
+              <input
+                className='sm:w-[15vw] px-4 py-1 border inset-shadow-2xs border-gray-200 rounded-full text-center text-xs mx-1'
+                type='password'
+                id='password'
+                autoComplete='off'
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                placeholder='Password'
+                required
+              />
+
+              {/* CONFIRM PASSWORD */}
+              <input
+                className='sm:w-[15vw] px-4 py-1 border inset-shadow-2xs border-gray-200 rounded-full text-center text-xs mx-1'
+                type='password'
+                id='confirmPassword'
+                autoComplete='off'
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
+                placeholder='Confirm Password'
+                required
+              />
             </div>
 
-            {/* USERNAME LABEL */}
-            <label htmlFor='username'>
-              <span className={validUsername ? 'valid' : 'hide'}>
-                <FontAwesomeIcon icon={faCheck} aria-hidden='true' />
-              </span>
-              <span className={validUsername || !username ? 'hide' : 'invalid'}>
-                <FontAwesomeIcon icon={faTimes} aria-hidden='true' />
-              </span>
-            </label>
-
-            {/* USERNAME INPUT */}
-            <input
-              type='text'
-              id='username'
-              autoComplete='on'
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-              placeholder='Username'
-              required
-            />
-            <p
-              className={
-                username && !validUsername ? 'instructions' : 'offscreen'
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} aria-hidden='true' />
-              Must have 3 to 24 characters <br />
-              Username cannot contain spaces <br />
-            </p>
-
-            {/* EMAIL LABEL */}
-            <label htmlFor='email'>
-              <span className={validEmail ? 'valid' : 'hide'}>
-                <FontAwesomeIcon icon={faCheck} aria-hidden='true' />
-              </span>
-              <span className={validEmail || !email ? 'hide' : 'invalid'}>
-                <FontAwesomeIcon icon={faTimes} aria-hidden='true' />
-              </span>
-            </label>
-
-            {/* EMAIL INPUT */}
-            <input
-              type='email'
-              id='email'
-              autoComplete='on'
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              placeholder='Email'
-              required
-            />
-            <p className={email && !validEmail ? 'instructions' : 'offscreen'}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must be a valid email address <br />
-            </p>
-
-            {/* PASSWORD LABEL */}
-            <label htmlFor='password'>
-              <span className={validPassword ? 'valid' : 'hide'}>
-                <FontAwesomeIcon icon={faCheck} aria-hidden='true' />
-              </span>
-              <span className={validPassword || !password ? 'hide' : 'invalid'}>
-                <FontAwesomeIcon icon={faTimes} aria-hidden='true' />
-              </span>
-            </label>
-
-            {/* PASSWORD INPUT */}
-            <input
-              type='password'
-              id='password'
-              autoComplete='off'
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              placeholder='Password'
-              required
-            />
-            <p
-              className={
-                password || !validPassword ? 'instructions' : 'offscreen'
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must be at least 10 characters <br />
-              Password must contain upper and lower case letters, a number, and
-              a special character <br />
-              Allowed special characters: {specialChars}
-            </p>
-
-            {/* CONFIRM PASSWORD LABEL */}
-            <label htmlFor='confirmPassword'>
-              <span
-                className={
-                  validConfirmPassword && confirmPassword ? 'valid' : 'hide'
-                }
-              >
-                <FontAwesomeIcon icon={faCheck} aria-hidden='true' />
-              </span>
-              <span
-                className={
-                  validConfirmPassword || !confirmPassword ? 'hide' : 'invalid'
-                }
-              >
-                <FontAwesomeIcon icon={faTimes} aria-hidden='true' />
-              </span>
-            </label>
-
-            {/* CONFIRM PASSWORD INPUT */}
-            <input
-              type='password'
-              id='confirmPassword'
-              autoComplete='off'
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
-              placeholder='Confirm Password'
-              required
-            />
-            <p
-              className={
-                confirmPassword.length > 0 && !validConfirmPassword
-                  ? 'instructions'
-                  : 'offscreen'
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} aria-hidden='true' />
-              Passwords must match <br />
-            </p>
-
-            {/* SUBMIT BUTTON */}
             <button
+              className='w-[25vw] px-4 py-2 rounded-full bg-[var(--green)] hover:bg-[var(--light-green)] text-white font-semibold shadow cursor-pointer'
               disabled={
                 !validUsername ||
                 !validEmail ||
@@ -233,14 +152,12 @@ const Signup = ({ onSubmit }: SignupProps) => {
               Signup
             </button>
           </form>
-          <p>
-            <span>
-              <Link to='/login'>Already have an account?</Link>
-            </span>
+          <p className='text-center pt-2'>
+            <Link to='/login'>Already have an account?</Link>
           </p>
         </section>
       )}
-    </div>
+    </>
   )
 }
 
