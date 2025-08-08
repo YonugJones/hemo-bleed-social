@@ -10,7 +10,7 @@ const AuthNav = () => {
   }
 
   return (
-    <nav className='relative w-full'>
+    <nav className='relative w-full px-6 py-4'>
       <ul className='hidden sm:flex justify-end gap-4 text-xs text-gray-400'>
         <li>
           <Link to='/login'>Log in</Link>

@@ -15,23 +15,21 @@ const AuthLayout = () => {
 
   return (
     <div className='flex flex-col min-h-screen'>
-      <header className='w-full px-6 py-4'>
+      <header>
         <AuthNav />
       </header>
-      <main className='flex flex-col items-center justify-start flex-grow'>
-        <div className='mt-[10vh] sm:mt-[25vh] flex items-center justify-center w-full'>
-          <Link to='/'>
-            <Hero subtitle={getSubtitle(pathname)} />
-          </Link>
-        </div>
-
+      <main className='flex flex-col items-center flex-grow'>
+        <Link
+          to='/'
+          className='mt-[10vh] sm:mt-[25vh] flex items-center justify-center w-full'
+        >
+          <Hero subtitle={getSubtitle(pathname)} />
+        </Link>
         <div className='w-full max-w-md px-6'>
           <Outlet />
         </div>
       </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Footer />
     </div>
   )
 }

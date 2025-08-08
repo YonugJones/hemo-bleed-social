@@ -12,9 +12,7 @@ const Hero = ({ subtitle }: HeroProps) => {
           Hemo Bleed Social
         </h1>
       </div>
-
-      {/* Subtitle centered horizontally across the screen */}
-      <h2 className='mt-4 w-full text-center'>{subtitle}</h2>
+      <h2 className='mt-4 text-center'>{subtitle}</h2>
     </div>
   )
 }
