@@ -1,0 +1,76 @@
+import { type Infusion } from './types'
+
+export const mockInfusions: Infusion[] = [
+  {
+    id: 1,
+    date: new Date('2025-08-01'),
+    bleedTreatment: true,
+    medication: 'Altuviiio',
+    dosageAmount: 50,
+    administrationMethod: 'IV',
+    location: 'Home',
+    sideEffects: 'Mild headache',
+    notes: 'Infusion went smoothly',
+  },
+  {
+    id: 2,
+    date: new Date('2025-07-29'),
+    bleedTreatment: false,
+    medication: 'Altuviiio',
+    dosageAmount: 45,
+    administrationMethod: 'IV',
+    location: 'Clinic',
+  },
+  {
+    id: 3,
+    date: new Date('2025-07-25'),
+    bleedTreatment: true,
+    medication: 'Altuviiio',
+    dosageAmount: 50,
+    location: 'Home',
+    notes: 'Post-bleed treatment',
+  },
+  {
+    id: 4,
+    date: new Date('2025-07-21'),
+    bleedTreatment: false,
+    medication: 'Altuviiio',
+  },
+  {
+    id: 5,
+    date: new Date('2025-07-18'),
+    bleedTreatment: true,
+    medication: 'Altuviiio',
+    sideEffects: 'Fatigue',
+  },
+  {
+    id: 6,
+    date: new Date('2025-07-15'),
+    bleedTreatment: false,
+    medication: 'Altuviiio',
+  },
+  {
+    id: 7,
+    date: new Date('2025-07-12'),
+    bleedTreatment: true,
+    medication: 'Altuviiio',
+  },
+  {
+    id: 8,
+    date: new Date('2025-07-09'),
+    bleedTreatment: false,
+    medication: 'Altuviiio',
+  },
+  {
+    id: 9,
+    date: new Date('2025-07-06'),
+    bleedTreatment: true,
+    medication: 'Altuviiio',
+  },
+  {
+    id: 10,
+    date: new Date('2025-07-03'),
+    bleedTreatment: false,
+    medication: 'Altuviiio',
+  },
+]
