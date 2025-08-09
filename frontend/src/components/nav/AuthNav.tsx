@@ -13,13 +13,19 @@ const AuthNav = () => {
     <nav className='relative w-full px-6 py-4'>
       <ul className='hidden sm:flex justify-end gap-4 text-xs text-gray-400'>
         <li>
-          <Link to='/login'>Log in</Link>
+          <Link to='/login' className='link-underline'>
+            Log in
+          </Link>
         </li>
         <li>
-          <Link to='/signup'>Sign up</Link>
+          <Link to='/signup' className='link-underline'>
+            Sign up
+          </Link>
         </li>
         <li>
-          <Link to='learn-more'>Learn more</Link>
+          <Link to='learn-more' className='link-underline'>
+            Learn more
+          </Link>
         </li>
       </ul>
       <button
