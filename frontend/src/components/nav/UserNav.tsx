@@ -13,7 +13,7 @@ const UserNav = () => {
     <nav className='w-full px-40 py-4 flex justify-center shadow-md'>
       <ul className='flex gap-5'>
         <li className='group relative'>
-          <Link to='/activity' className='link-underline' aria-label='activity'>
+          <Link to='/feed' className='link-underline' aria-label='activity'>
             <FontAwesomeIcon icon={faBolt} />
             <span className='tooltip'>Activity</span>
           </Link>
