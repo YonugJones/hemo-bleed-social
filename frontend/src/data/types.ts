@@ -1,33 +1,26 @@
-export interface User {
-  id: number
-  firstName?: string
-  lastName?: string
-  username: string
-  email: string
-  profilePic?: string
-  infusions?: Infusion[]
-  bleeds?: Bleed[]
+export type BaseEvent = {
+  eventId: string
+  sessionId: string
+  type: 'bleed' | 'infusion' | 'activity'
+  date: string
 }
 
-export interface Infusion {
-  id: number
-  userId: number
-  location: string
-  dosage: number
-  medication: string
-  date: Date
-  notes?: string
-  bleedId?: number
-}
-
-export interface Bleed {
-  id: number
-  userId: number
+export type BleedEvent = BaseEvent & {
+  type: 'bleed'
   location: string
   severity: 'mild' | 'moderate' | 'severe'
-  notes?: string
-  isActive: boolean
-  infusionId?: number
-  didPhysicalTherapy?: boolean
-  physicalTherapy?: string
+  isTargetJoint: boolean
+}
+
+export type InfusionEvent = BaseEvent & {
+  type: 'infusion'
+  location: string
+  isProphy: boolean
+}
+
+export type ActivityEvent = BaseEvent & {
+  type: 'activity'
+  title: string
+  durationInMinutes: number
+  isPhysicalTherapy: boolean
 }
