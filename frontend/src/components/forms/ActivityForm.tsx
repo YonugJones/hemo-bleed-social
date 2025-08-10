@@ -6,14 +6,6 @@ const ActivityForm = () => {
   const [isPhysicalTherapy, setIsPhysicalTherapy] = useState(false)
 
   return (
-    // <>
-    //   <input type='text' placeholder='Activity name' />
-    //   <input type='number' placeholder='Duration (in minutes)' />
-    //   <label>
-    //     <input type='checkbox' name='physicalTherapy' />
-    //     Physical Therapy
-    //   </label>
-    // </>
     <fieldset className='flex flex-col gap-y-2 border p-4 rounded'>
       <legend className='font-semibold'>Activity Details</legend>
 
