@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Login = () => {
@@ -43,7 +43,9 @@ const Login = () => {
         </button>
       </form>
       <p className='text-center pt-2'>
-        <Link to='/signup'>Don&apos;t have an account?</Link>
+        <Link to='/signup' className='text-[var(--green)]'>
+          Don&apos;t have an account?
+        </Link>
       </p>
     </section>
   )
