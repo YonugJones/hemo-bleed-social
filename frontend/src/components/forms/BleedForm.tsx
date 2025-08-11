@@ -2,12 +2,13 @@ import { useState } from 'react'
 
 const BleedForm = () => {
   const [location, setLocation] = useState<string>('')
-  const [severity, setSeverity] = useState('mild')
+  const [severity, setSeverity] = useState('')
   const [isTargetJoint, setIsTargetJoint] = useState(false)
+  const [notes, setNotes] = useState('')
 
   return (
-    <fieldset className='flex flex-col gap-y-2 border p-4 rounded'>
-      <legend className='font-semibold'>Bleed Details</legend>
+    <fieldset className='flex flex-col gap-y-2 border p-4 rounded shadow'>
+      <legend className='font-semibold text-[var(--red)]'>Bleed Details</legend>
 
       <input
         type='text'
@@ -22,6 +23,7 @@ const BleedForm = () => {
         onChange={(e) => setSeverity(e.target.value)}
         className='border rounded px-3 py-1'
       >
+        <option value=''>-- Severity --</option>
         <option value='mild'>Mild</option>
         <option value='moderate'>Moderate</option>
         <option value='severe'>Severe</option>
@@ -35,6 +37,13 @@ const BleedForm = () => {
         />{' '}
         Target joint
       </label>
+
+      <input
+        type='text'
+        placeholder='Notes'
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+      />
     </fieldset>
   )
 }

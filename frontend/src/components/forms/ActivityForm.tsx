@@ -4,10 +4,13 @@ const ActivityForm = () => {
   const [name, setName] = useState('')
   const [duration, setDuration] = useState<number | ''>('')
   const [isPhysicalTherapy, setIsPhysicalTherapy] = useState(false)
+  const [notes, setNotes] = useState('')
 
   return (
-    <fieldset className='flex flex-col gap-y-2 border p-4 rounded'>
-      <legend className='font-semibold'>Activity Details</legend>
+    <fieldset className='flex flex-col gap-y-2 border p-4 rounded shadow'>
+      <legend className='font-semibold text-[var(--green)]'>
+        Activity Details
+      </legend>
 
       <input
         type='text'
@@ -35,6 +38,13 @@ const ActivityForm = () => {
         />{' '}
         Physical therapy
       </label>
+
+      <input
+        type='text'
+        placeholder='Notes'
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+      />
     </fieldset>
   )
 }
