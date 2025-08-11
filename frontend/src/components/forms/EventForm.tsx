@@ -28,8 +28,14 @@ const EventForm = () => {
       onSubmit={handleSubmit}
       className='flex flex-col justify-center gap-y-4 w-full max-w-lg min-w-[150px] mx-auto pt-4 px-3'
     >
-      <fieldset className='flex items-center sm:items-stretch gap-y-4 gap-x-3 sm:w-full mx-auto'>
-        <label className='flex justify-center items-center gap-2 w-12 h-12 sm:w-full sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 px-0 sm:px-10 cursor-pointer select-none text-[var(--red)] border border-[var(--red)] hover:bg-[var(--light-red)]'>
+      <fieldset className='flex justify-center items-center sm:items-stretch gap-y-4 gap-x-3 sm:w-full mx-auto'>
+        <label
+          className={`flex justify-center items-center gap-2 w-12 h-12 sm:w-32 sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 px-0 sm:px-10 cursor-pointer select-none text-[var(--red)] border border-[var(--red)] ${
+            selectedEvents.includes('bleed')
+              ? 'bg-[var(--light-red)]'
+              : 'hover:bg-[var(--light-red)]'
+          }`}
+        >
           <input
             type='checkbox'
             className='sr-only'
@@ -40,7 +46,13 @@ const EventForm = () => {
           <FontAwesomeIcon icon={faDroplet} />
         </label>
 
-        <label className='flex justify-center items-center gap-2 w-12 h-12 sm:w-full sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 cursor-pointer select-none text-[var(--blue)] border border-[var(--blue)] hover:bg-[var(--light-blue)]'>
+        <label
+          className={`flex justify-center items-center gap-2 w-12 h-12 sm:w-32 sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 cursor-pointer select-none text-[var(--blue)] border border-[var(--blue)] ${
+            selectedEvents.includes('infusion')
+              ? 'bg-[var(--light-blue)]'
+              : 'hover:bg-[var(--light-blue)]'
+          }`}
+        >
           <input
             type='checkbox'
             className='sr-only'
@@ -51,7 +63,13 @@ const EventForm = () => {
           <FontAwesomeIcon icon={faSyringe} />
         </label>
 
-        <label className='flex justify-center items-center gap-2 w-12 h-12 sm:w-full sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 cursor-pointer select-none text-[var(--green)] border border-[var(--green)] hover:bg-[var(--light-green)]'>
+        <label
+          className={`flex justify-center items-center gap-2 w-12 h-12 sm:w-32 sm:h-auto rounded-full sm:rounded-full py-1 sm:py-1 cursor-pointer select-none text-[var(--green)] border border-[var(--green)] ${
+            selectedEvents.includes('activity')
+              ? 'bg-[var(--light-green)]'
+              : 'hover:bg-[var(--light-green)]'
+          }`}
+        >
           <input
             type='checkbox'
             className='sr-only'
