@@ -7,7 +7,7 @@ const Hero = ({ subtitle }: HeroProps) => {
     <div className='w-full mb-5 text-[var(--green)]'>
       <div className='flex flex-col sm:flex-row items-center justify-center gap-5'>
         <img src='https://placehold.co/60' alt='Hemo Bleed Social Logo' />
-        <h1 className='jaro-logo text-4xl sm:text-5xl md:text-6xl text-center sm:text-left'>
+        <h1 className='jaro-logo text-5xl sm:text-6xl text-center flex-wrap'>
           Hemo Bleed Social
         </h1>
       </div>
