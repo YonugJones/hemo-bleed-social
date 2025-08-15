@@ -15,9 +15,7 @@ const AuthLayout = () => {
 
   return (
     <div className='flex flex-col min-h-screen'>
-      <header>
-        <AuthNav />
-      </header>
+      <AuthNav />
       <main className='flex flex-col items-center flex-grow'>
         <Link
           to='/'
