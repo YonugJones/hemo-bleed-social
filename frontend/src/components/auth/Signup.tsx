@@ -6,39 +6,18 @@ import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
 } from '../../utils/validation'
-
-type SignupFormValues = {
-  username: string
-  email: string
-  password: string
-  confirmPassword: string
-}
+import type {
+  SignupFormValues,
+  SignupFormState,
+  SignupFormAction,
+  ValidationKeys,
+} from '../../types/auth'
 
 type SignupProps = {
   onSubmit?: (data: SignupFormValues) => void | Promise<void>
 }
 
-type State = SignupFormValues & {
-  validUsername: boolean
-  validEmail: boolean
-  validPassword: boolean
-  validConfirmPassword: boolean
-  errMsg: string
-  success: boolean
-}
-
-type Action =
-  | { type: 'SET_FIELD'; field: keyof SignupFormValues; value: string }
-  | {
-      type: 'SET_VALIDATION'
-      field: keyof Omit<State, keyof SignupFormValues>
-      value: boolean
-    }
-  | { type: 'SET_ERROR'; message: string }
-  | { type: 'SET_SUCCESS'; value: boolean }
-  | { type: 'RESET' }
-
-const initialState: State = {
+const initialState: SignupFormState = {
   username: '',
   email: '',
   password: '',
@@ -51,7 +30,10 @@ const initialState: State = {
   success: false,
 }
 
-function reducer(state: State, action: Action): State {
+function reducer(
+  state: SignupFormState,
+  action: SignupFormAction
+): SignupFormState {
   switch (action.type) {
     case 'SET_FIELD':
       return { ...state, [action.field]: action.value }
@@ -71,43 +53,26 @@ function reducer(state: State, action: Action): State {
 const Signup = ({ onSubmit }: SignupProps) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const setValidation = (field: ValidationKeys, value: boolean) => {
+    dispatch({ type: 'SET_VALIDATION', field, value })
+  }
+
   const handleChange = (field: keyof SignupFormValues, value: string) => {
     dispatch({ type: 'SET_FIELD', field, value })
 
-    // validation
     switch (field) {
       case 'username':
-        dispatch({
-          type: 'SET_VALIDATION',
-          field: 'validUsername',
-          value: USERNAME_REGEX.test(value),
-        })
+        setValidation('validUsername', USERNAME_REGEX.test(value))
         break
       case 'email':
-        dispatch({
-          type: 'SET_VALIDATION',
-          field: 'validEmail',
-          value: EMAIL_REGEX.test(value),
-        })
+        setValidation('validEmail', EMAIL_REGEX.test(value))
         break
       case 'password':
-        dispatch({
-          type: 'SET_VALIDATION',
-          field: 'validPassword',
-          value: PASSWORD_REGEX.test(value),
-        })
-        dispatch({
-          type: 'SET_VALIDATION',
-          field: 'validConfirmPassword',
-          value: value === state.confirmPassword,
-        })
+        setValidation('validPassword', PASSWORD_REGEX.test(value))
+        setValidation('validConfirmPassword', value === state.confirmPassword)
         break
       case 'confirmPassword':
-        dispatch({
-          type: 'SET_VALIDATION',
-          field: 'validConfirmPassword',
-          value: value === state.password,
-        })
+        setValidation('validConfirmPassword', value === state.password)
         break
     }
   }
@@ -159,6 +124,7 @@ const Signup = ({ onSubmit }: SignupProps) => {
           <input
             className={inputClass}
             type='text'
+            autoComplete='off'
             placeholder='Username'
             value={state.username}
             onChange={(e) => handleChange('username', e.target.value)}
@@ -167,6 +133,7 @@ const Signup = ({ onSubmit }: SignupProps) => {
           <input
             className={inputClass}
             type='email'
+            autoComplete='off'
             placeholder='Email'
             value={state.email}
             onChange={(e) => handleChange('email', e.target.value)}
@@ -175,6 +142,7 @@ const Signup = ({ onSubmit }: SignupProps) => {
           <input
             className={inputClass}
             type='password'
+            autoComplete='off'
             placeholder='Password'
             value={state.password}
             onChange={(e) => handleChange('password', e.target.value)}
@@ -183,6 +151,7 @@ const Signup = ({ onSubmit }: SignupProps) => {
           <input
             className={inputClass}
             type='password'
+            autoComplete='off'
             placeholder='Confirm Password'
             value={state.confirmPassword}
             onChange={(e) => handleChange('confirmPassword', e.target.value)}
