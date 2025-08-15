@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import type { ActivityDetails } from '../../types/eventType'
 
-const ActivityForm = () => {
+interface ActivityFormProps {
+  onChange: (data: ActivityDetails) => void
+}
+
+const ActivityForm = ({ onChange }: ActivityFormProps) => {
   const [name, setName] = useState('')
   const [duration, setDuration] = useState<number | ''>('')
   const [isPhysicalTherapy, setIsPhysicalTherapy] = useState(false)
   const [notes, setNotes] = useState('')
+
+  useEffect(() => {
+    onChange({ name, duration, isPhysicalTherapy, notes })
+  }, [name, duration, isPhysicalTherapy, notes, onChange])
 
   return (
     <fieldset className='flex flex-col gap-y-2 border p-4 rounded shadow'>

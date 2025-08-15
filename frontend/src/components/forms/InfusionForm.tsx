@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { type InfusionDetails } from '../../types/eventType'
 
-const InfusionForm = () => {
+interface InfusionFormProps {
+  onChange: (data: InfusionDetails) => void
+}
+
+const InfusionForm = ({ onChange }: InfusionFormProps) => {
   const [location, setLocation] = useState('')
   const [dosage, setDosage] = useState<number | ''>('')
   const [isProphylaxis, setIsProphylaxis] = useState(false)
   const [notes, setNotes] = useState('')
+
+  useEffect(() => {
+    onChange({ location, dosage, isProphylaxis, notes })
+  }, [location, dosage, isProphylaxis, notes, onChange])
 
   return (
     <fieldset className='flex flex-col gap-y-2 border p-4 rounded shadow'>

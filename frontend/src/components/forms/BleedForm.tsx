@@ -1,10 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import type { BleedDetails } from '../../types/eventType'
 
-const BleedForm = () => {
+interface BleedFormProps {
+  onChange: (data: BleedDetails) => void
+}
+
+const BleedForm = ({ onChange }: BleedFormProps) => {
   const [location, setLocation] = useState<string>('')
-  const [severity, setSeverity] = useState('')
+  const [severity, setSeverity] = useState<'mild' | 'moderate' | 'severe'>(
+    'mild'
+  )
   const [isTargetJoint, setIsTargetJoint] = useState(false)
   const [notes, setNotes] = useState('')
+
+  // whenever any field changes, tell the parent EventForm
+  useEffect(() => {
+    onChange({ location, severity, isTargetJoint, notes })
+  }, [location, severity, isTargetJoint, notes, onChange])
 
   return (
     <fieldset className='flex flex-col gap-y-2 border p-4 rounded shadow'>
@@ -20,10 +32,11 @@ const BleedForm = () => {
 
       <select
         value={severity}
-        onChange={(e) => setSeverity(e.target.value)}
+        onChange={(e) =>
+          setSeverity(e.target.value as 'mild' | 'moderate' | 'severe')
+        }
         className='border rounded px-3 py-1'
       >
-        <option value=''>-- Severity --</option>
         <option value='mild'>Mild</option>
         <option value='moderate'>Moderate</option>
         <option value='severe'>Severe</option>
