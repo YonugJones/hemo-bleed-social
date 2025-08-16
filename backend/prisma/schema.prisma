@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------- Enums -------------------
+enum HemophiliaType {
+  A
+  B
+  C
+  VonWillebrand
+}
+
+enum HemophiliaSeverity {
+  Mild
+  Moderate
+  Severe
+}
+
+enum EventType {
+  Bleed
+  Infusion
+  Activity
+}
+
+enum BleedSeverity {
+  Mild
+  Moderate
+  Severe
+}
+
+enum InfusionReason {
+  Prophylaxis
+  ActivityRelated
+  ProcedureOrSurgery
+  Other
+}
+
+// ------------------- User -------------------
+model User {
+  id              String             @id @default(uuid())
+  username        String             @unique
+  email           String             @unique
+  password        String
+  type            HemophiliaType     @default(A)
+  severity        HemophiliaSeverity @default(Mild)
+  medicineType    String             @default("Unknown")
+  dosageAmount    Int                @default(0)
+  dosageFrequency String             @default("Unknown")
+  refreshToken    String?
+  profilePic      String?
+  createdAt       DateTime           @default(now())
+
+  events Event[]
+}
+
+// ------------------- Event -------------------
+model Event {
+  id        String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  type      EventType
+  createdAt DateTime  @default(now())
+
+  bleed    Bleed?
+  infusion Infusion?
+  activity Activity?
+}
+
+// ------------------- Bleed -------------------
+model Bleed {
+  id       String        @id @default(uuid())
+  eventId  String        @unique
+  location String
+  severity BleedSeverity @default(Mild)
+  date     DateTime      @default(now())
+  note     String?
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+// ------------------- Infusion -------------------
+model Infusion {
+  id         String         @id @default(uuid())
+  eventId    String         @unique
+  medicine   String
+  dosage     Int
+  location   String
+  lotNumbers String
+  reason     InfusionReason
+  note       String?
+  date       DateTime       @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+// ------------------- Activity -------------------
+model Activity {
+  id                String  @id @default(uuid())
+  eventId           String  @unique
+  name              String
+  durationInMinutes Int
+  isPhysicalTherapy Boolean
+  note              String?
+
+  event Event @relation(fields: [eventId], references: [id])
+}
