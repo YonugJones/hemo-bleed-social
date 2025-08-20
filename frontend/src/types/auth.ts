@@ -1,16 +1,21 @@
-export interface SignupFormState {
-  username: string
-  validUsername: boolean
-  email: string
-  validEmail: boolean
-  password: string
-  validPassword: boolean
-  confirmPassword: string
-  validConfirmPassword: boolean
+export interface AuthState {
+  id?: string
+  username?: string
+  email?: string
+  accessToken?: string
+  refreshToken?: string
+  profilePic?: string
 }
 
-export type SignupFormAction =
-  | { type: 'SET_FIELD'; field: keyof SignupFormState; value: string | boolean }
-  | { type: 'SET_ERROR'; message: string }
-  | { type: 'SET_SUCCESS'; value: boolean }
-  | { type: 'RESET' }
+export type SignupFormValues = {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+}
+
+export type ValidationKeys =
+  | 'validUsername'
+  | 'validEmail'
+  | 'validPassword'
+  | 'validConfirmPassword'
