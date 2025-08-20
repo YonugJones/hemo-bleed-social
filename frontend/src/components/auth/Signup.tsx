@@ -1,4 +1,5 @@
-import { useReducer, type FormEvent } from 'react'
+import { signupUser } from '../../api/auth'
+import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { formClass, inputClass, buttonClass } from '../../styles/classNames'
 import {
@@ -6,102 +7,90 @@ import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
 } from '../../utils/validation'
-import type {
-  SignupFormValues,
-  SignupFormState,
-  SignupFormAction,
-  ValidationKeys,
-} from '../../types/auth'
+import type { SignupFormValues, ValidationKeys } from '../../types/auth'
+import axios from 'axios'
 
-type SignupProps = {
-  onSubmit?: (data: SignupFormValues) => void | Promise<void>
-}
-
-const initialState: SignupFormState = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  validUsername: false,
-  validEmail: false,
-  validPassword: false,
-  validConfirmPassword: false,
-  errMsg: '',
-  success: false,
-}
-
-function reducer(
-  state: SignupFormState,
-  action: SignupFormAction
-): SignupFormState {
-  switch (action.type) {
-    case 'SET_FIELD':
-      return { ...state, [action.field]: action.value }
-    case 'SET_VALIDATION':
-      return { ...state, [action.field]: action.value }
-    case 'SET_ERROR':
-      return { ...state, errMsg: action.message }
-    case 'SET_SUCCESS':
-      return { ...state, success: action.value }
-    case 'RESET':
-      return initialState
-    default:
-      return state
-  }
-}
-
-const Signup = ({ onSubmit }: SignupProps) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
+const Signup = () => {
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [validUsername, setValidUsername] = useState(false)
+  const [validEmail, setValidEmail] = useState(false)
+  const [validPassword, setValidPassword] = useState(false)
+  const [validConfirmPassword, setValidConfirmPassword] = useState(false)
+  const [errMsg, setErrMsg] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [focusedField, setFocusedField] = useState<
+    keyof SignupFormValues | null
+  >(null)
 
   const setValidation = (field: ValidationKeys, value: boolean) => {
-    dispatch({ type: 'SET_VALIDATION', field, value })
+    switch (field) {
+      case 'validUsername':
+        setValidUsername(value)
+        break
+      case 'validEmail':
+        setValidEmail(value)
+        break
+      case 'validPassword':
+        setValidPassword(value)
+        break
+      case 'validConfirmPassword':
+        setValidConfirmPassword(value)
+        break
+    }
   }
 
   const handleChange = (field: keyof SignupFormValues, value: string) => {
-    dispatch({ type: 'SET_FIELD', field, value })
-
     switch (field) {
       case 'username':
+        setUsername(value)
         setValidation('validUsername', USERNAME_REGEX.test(value))
         break
       case 'email':
+        setEmail(value)
         setValidation('validEmail', EMAIL_REGEX.test(value))
         break
       case 'password':
+        setPassword(value)
         setValidation('validPassword', PASSWORD_REGEX.test(value))
-        setValidation('validConfirmPassword', value === state.confirmPassword)
+        setValidation('validConfirmPassword', value === confirmPassword)
         break
       case 'confirmPassword':
-        setValidation('validConfirmPassword', value === state.password)
+        setConfirmPassword(value)
+        setValidation('validConfirmPassword', value === password)
         break
     }
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (
-      state.validUsername &&
-      state.validEmail &&
-      state.validPassword &&
-      state.validConfirmPassword
-    ) {
-      await onSubmit?.({
-        username: state.username,
-        email: state.email,
-        password: state.password,
-        confirmPassword: state.confirmPassword,
-      })
-      dispatch({ type: 'SET_SUCCESS', value: true })
-      dispatch({ type: 'RESET' })
+
+    if (validUsername && validEmail && validPassword && validConfirmPassword) {
+      try {
+        await signupUser({
+          username,
+          email,
+          password,
+          confirmPassword,
+        })
+        setSuccess(true)
+      } catch (error) {
+        let message = 'Signup failed. Try again.'
+
+        if (axios.isAxiosError(error)) {
+          message = error.response?.data?.message || message
+        }
+
+        setErrMsg(message)
+      }
     } else {
-      dispatch({
-        type: 'SET_ERROR',
-        message: 'Please fix the highlighted fields.',
-      })
+      setErrMsg('Please fix the highlighted fields')
     }
   }
 
-  if (state.success) {
+  if (success) {
     return (
       <section className={formClass}>
         <h1>Account Created!</h1>
@@ -114,67 +103,100 @@ const Signup = ({ onSubmit }: SignupProps) => {
 
   return (
     <section>
-      <p
-        className={state.errMsg ? 'text-red-600 text-center mb-2' : 'offscreen'}
-      >
-        {state.errMsg}
+      <p className={errMsg ? 'text-red-600 text-center mb-2' : 'offscreen'}>
+        {errMsg}
       </p>
       <form className={formClass} onSubmit={handleSubmit} noValidate>
         <div className='flex flex-col sm:flex-col md:flex-row flex-wrap justify-center items-center gap-2 w-full'>
           <input
-            className={inputClass}
+            className={`${inputClass} ${
+              !validUsername && errMsg ? 'border-red-500' : ''
+            }`}
             type='text'
             autoComplete='off'
             placeholder='Username'
-            value={state.username}
+            value={username}
             onChange={(e) => handleChange('username', e.target.value)}
+            onFocus={() => setFocusedField('username')}
+            onBlur={() => setFocusedField(null)}
             required
           />
           <input
-            className={inputClass}
+            className={`${inputClass} ${
+              !validEmail && errMsg ? 'border-red-500' : ''
+            }`}
             type='email'
             autoComplete='off'
             placeholder='Email'
-            value={state.email}
+            value={email}
             onChange={(e) => handleChange('email', e.target.value)}
+            onFocus={() => setFocusedField('email')}
+            onBlur={() => setFocusedField(null)}
             required
           />
           <input
-            className={inputClass}
+            className={`${inputClass} ${
+              !validPassword && errMsg ? 'border-red-500' : ''
+            }`}
             type='password'
             autoComplete='off'
             placeholder='Password'
-            value={state.password}
+            value={password}
             onChange={(e) => handleChange('password', e.target.value)}
+            onFocus={() => setFocusedField('password')}
+            onBlur={() => setFocusedField(null)}
             required
           />
           <input
-            className={inputClass}
+            className={`${inputClass} ${
+              password && confirmPassword && !validConfirmPassword && errMsg
+                ? 'border-red-500'
+                : ''
+            }`}
             type='password'
             autoComplete='off'
             placeholder='Confirm Password'
-            value={state.confirmPassword}
+            value={confirmPassword}
             onChange={(e) => handleChange('confirmPassword', e.target.value)}
+            onFocus={() => setFocusedField('confirmPassword')}
+            onBlur={() => setFocusedField(null)}
             required
           />
         </div>
         <button
           className={buttonClass}
           disabled={
-            !state.validUsername ||
-            !state.validEmail ||
-            !state.validPassword ||
-            !state.validConfirmPassword
+            !validUsername ||
+            !validEmail ||
+            !validPassword ||
+            !validConfirmPassword
           }
         >
           Signup
         </button>
       </form>
       <p className='text-center pt-2'>
-        <Link to='/login' className='text-[var(--green)]'>
-          Already have an account?
-        </Link>
+        <Link to='/login'>Already have an account?</Link>
       </p>
+      {focusedField === 'username' && !validUsername && (
+        <p className='text-red-600 text-center mt-2'>
+          Must be at least 3 characters.
+        </p>
+      )}
+      {focusedField === 'email' && !validEmail && (
+        <p className='text-red-600 text-center mt-2'>
+          Must be a valid email address.
+        </p>
+      )}
+      {focusedField === 'password' && !validPassword && (
+        <p className='text-red-600 text-center mt-2'>
+          Minimum 10 characters. At least 1 lowercase, uppercase, nueric, and
+          special character
+        </p>
+      )}
+      {focusedField === 'confirmPassword' && !validConfirmPassword && (
+        <p className='text-red-600 text-center mt-2'>Passwords must match.</p>
+      )}
     </section>
   )
 }
