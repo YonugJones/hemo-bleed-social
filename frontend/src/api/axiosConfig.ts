@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'http://localhost:3333'
 
 // creates axiosInstance without credentials for use by authApi calls
 export const axiosPublic = axios.create({
