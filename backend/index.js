@@ -4,7 +4,8 @@ const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const errorHandler = require('./middleware/errorHandler')
 const cookieParser = require('cookie-parser')
-const authRouter = require('./routes/auth') // <- match file name
+const authRouter = require('./routes/auth')
+const infusionRouter = require('./routes/infusion')
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authRouter)
+app.use('/events/infusion', infusionRouter)
 
 // Global Error Handler
 app.use(errorHandler)
