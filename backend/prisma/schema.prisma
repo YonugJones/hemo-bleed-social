@@ -94,10 +94,10 @@ model Infusion {
   id         String         @id @default(uuid())
   eventId    String         @unique
   medicine   String
-  dosage     Int
-  location   String
-  lotNumbers String
-  reason     InfusionReason
+  dosage     Int            @default(0)
+  location   String         @default("")
+  lotNumbers String         @default("")
+  reason     InfusionReason @default(Prophylaxis)
   note       String?
   date       DateTime       @default(now())
 
