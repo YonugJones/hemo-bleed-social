@@ -14,3 +14,12 @@ export const loginUser = async (username: string, password: string) => {
   )
   return res.data
 }
+
+export const logoutUser = async () => {
+  try {
+    const res = await axiosPublic.post('/auth/logout')
+    return res.data
+  } catch (err) {
+    console.error('API error:', err)
+  }
+}
