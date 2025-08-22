@@ -58,7 +58,7 @@ const createEventWithChild = asyncHandler(async (userId, type, data) => {
 })
 
 /**
- * Update an Event + related sub-record
+ * Helper to update an Event + related sub-record (Bleed, Infusion, Activity).
  * @param {string} userId - ID of the user editing the event
  * @param {string} eventId - ID of the event to update
  * @param {string} type - EventType ("Bleed" | "Infusion" | "Activity")
@@ -106,6 +106,25 @@ const updateEventWithChild = asyncHandler(
 )
 
 /**
+ * Helper to delete an event + related sub-record (Bleed, Infusion, Activity).
+ * @param {string} userId - ID of the user creating the event
+ * @param {string} eventId - ID of the event to delete
+ * @returns {Promise<object>} - Deletes event with relation included and returns success + message
+ */
+const deleteEventWithChild = asyncHandler(async (userId, eventId) => {
+  if (!eventId) throw new CustomError('EventId is required', 400)
+
+  // ensure user owns the event
+  const event = await prisma.event.findUnique({ where: { id: eventId } })
+  if (!event) throw new CustomError('Event not found', 404)
+  if (event.userId !== userId) throw new CustomError('Unauthorized', 403)
+
+  await prisma.event.delete({ where: { id: eventId } })
+
+  return { success: true, message: 'Event deleted successfully' }
+})
+
+/**
  * Get all events for a given user, ordered by createdAt desc
  */
 const getUserEvents = asyncHandler(async (userId) => {
@@ -122,25 +141,9 @@ const getUserEvents = asyncHandler(async (userId) => {
   })
 })
 
-/**
- * Delete an event (and its child) by ID
- */
-const deleteEvent = asyncHandler(async (eventId, userId) => {
-  if (!eventId) throw new CustomError('EventId is required', 400)
-
-  // ensure user owns the event
-  const event = await prisma.event.findUnique({ where: { id: eventId } })
-  if (!event) throw new CustomError('Event not found', 404)
-  if (event.userId !== userId) throw new CustomError('Unauthorized', 403)
-
-  await prisma.event.delete({ where: { id: eventId } })
-
-  return { success: true, message: 'Event deleted successfully' }
-})
-
 module.exports = {
   createEventWithChild,
   updateEventWithChild,
+  deleteEventWithChild,
   getUserEvents,
-  deleteEvent,
 }
