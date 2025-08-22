@@ -58,6 +58,54 @@ const createEventWithChild = asyncHandler(async (userId, type, data) => {
 })
 
 /**
+ * Update an Event + related sub-record
+ * @param {string} userId - ID of the user editing the event
+ * @param {string} eventId - ID of the event to update
+ * @param {string} type - EventType ("Bleed" | "Infusion" | "Activity")
+ * @param {object} data - Updated child data
+ * @returns {Promise<object>} - Updated event with child
+ */
+const updateEventWithChild = asyncHandler(
+  async (userId, eventId, type, data) => {
+    if (!userId || !eventId || !type)
+      throw new CustomError('Missing required parameters', 400)
+
+    // fetch existing event
+    const event = await prisma.event.findUnique({ where: { id: eventId } })
+    if (!event) throw new CustomError('Event not found', 404)
+    if (event.userId !== userId) throw new CustomError('Unauthorized', 403)
+
+    // build child update object
+    let childUpdate = {}
+    switch (type) {
+      case 'Bleed':
+        childUpdate = { bleed: { update: data } }
+        break
+      case 'Infusion':
+        childUpdate = { infusion: { update: data } }
+        break
+      case 'Activity':
+        childUpdate = { activity: { update: data } }
+        break
+      default:
+        throw new CustomError(`Invalid event type: ${type}`, 400)
+    }
+
+    const updatedEvent = await prisma.event.update({
+      where: { id: eventId },
+      data: childUpdate,
+      include: {
+        bleed: true,
+        infusion: true,
+        activity: true,
+      },
+    })
+
+    return updatedEvent
+  }
+)
+
+/**
  * Get all events for a given user, ordered by createdAt desc
  */
 const getUserEvents = asyncHandler(async (userId) => {
@@ -92,6 +140,7 @@ const deleteEvent = asyncHandler(async (eventId, userId) => {
 
 module.exports = {
   createEventWithChild,
+  updateEventWithChild,
   getUserEvents,
   deleteEvent,
 }
