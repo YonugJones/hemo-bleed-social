@@ -67,7 +67,7 @@ model User {
 // ------------------- Event -------------------
 model Event {
   id        String    @id @default(uuid())
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   type      EventType
   createdAt DateTime  @default(now())
@@ -86,7 +86,7 @@ model Bleed {
   date     DateTime      @default(now())
   note     String?
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 // ------------------- Infusion -------------------
@@ -101,7 +101,7 @@ model Infusion {
   note       String?
   date       DateTime       @default(now())
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 // ------------------- Activity -------------------
@@ -113,5 +113,5 @@ model Activity {
   isPhysicalTherapy Boolean
   note              String?
 
-  event Event @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
