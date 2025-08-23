@@ -8,7 +8,7 @@ const {
 const prisma = require('../prisma/prismaClient')
 
 const createBleed = asyncHandler(async (req, res) => {
-  const userId = req.body.userId
+  const userId = req.user.id
   const { location, severity, note } = req.body
 
   if (!location) throw new CustomError('Bleed location required', 400)
