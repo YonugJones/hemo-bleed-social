@@ -3,8 +3,9 @@ const CustomError = require('../errors/customError')
 const {
   createEventWithChild,
   updateEventWithChild,
+  deleteEventWithChild,
 } = require('../services/eventService')
-// const prisma = require('../prisma/prismaClient')
+const prisma = require('../prisma/prismaClient')
 
 const createInfusion = asyncHandler(async (req, res) => {
   const userId = req.user.id
@@ -31,24 +32,26 @@ const createInfusion = asyncHandler(async (req, res) => {
 
 const updateInfusion = asyncHandler(async (req, res) => {
   const userId = req.user.id
-  const infusionId = req.params.id
+  const infusionId = req.params.infusionId
   const { medicine, dosage, location, lotNumbers, reasons, note } = req.body
+
   if (!medicine) throw new CustomError('Medicine field required', 403)
   if (!dosage) throw new CustomError('Dosage field required', 403)
 
-  const updatedEvent = await updateEventWithChild(
-    userId,
-    infusionId,
-    'Infusion',
-    {
-      medicine,
-      dosage,
-      location,
-      lotNumbers,
-      reasons,
-      note,
-    }
-  )
+  const infusion = await prisma.infusion.findUnique({
+    where: { id: infusionId },
+  })
+  if (!infusion) throw new CustomError('Infusion not found', 404)
+  const eventId = infusion.eventId
+
+  const updatedEvent = await updateEventWithChild(userId, eventId, 'Infusion', {
+    medicine,
+    dosage,
+    location,
+    lotNumbers,
+    reasons,
+    note,
+  })
 
   res.status(200).json({
     success: true,
@@ -57,7 +60,25 @@ const updateInfusion = asyncHandler(async (req, res) => {
   })
 })
 
+const deleteInfusion = asyncHandler(async (req, res) => {
+  const userId = req.user.id
+  const infusionId = req.params.infusionId
+
+  const infusion = await prisma.infusion.findUnique({
+    where: { id: infusionId },
+  })
+  if (!infusion) throw new CustomError('Infusion not found')
+  const eventId = infusion.eventId
+
+  await deleteEventWithChild(userId, eventId)
+
+  res
+    .status(200)
+    .json({ success: true, message: 'Infusion successfully deleted' })
+})
+
 module.exports = {
   createInfusion,
   updateInfusion,
+  deleteInfusion,
 }
