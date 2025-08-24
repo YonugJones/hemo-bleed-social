@@ -52,7 +52,21 @@ const updateBleed = asyncHandler(async (req, res) => {
   })
 })
 
+const deleteBleed = asyncHandler(async (req, res) => {
+  const userId = req.user.id
+  const bleedId = req.params.bleedId
+
+  const bleed = await prisma.bleed.findUnique({ where: { id: bleedId } })
+  if (!bleed) throw new CustomError('Bleed not found', 404)
+  const eventId = bleed.eventId
+
+  await deleteEventWithChild(userId, eventId)
+
+  res.status(200).json({ success: true, message: 'Bleed successfully deleted' })
+})
+
 module.exports = {
   createBleed,
   updateBleed,
+  deleteBleed,
 }
