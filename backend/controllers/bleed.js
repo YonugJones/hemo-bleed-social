@@ -27,6 +27,32 @@ const createBleed = asyncHandler(async (req, res) => {
   })
 })
 
+const updateBleed = asyncHandler(async (req, res) => {
+  const userId = req.user.id
+  const bleedId = req.params.bleedId
+  const { location, severity, note } = req.body
+
+  if (!location) throw new CustomError('Bleed location required', 400)
+  if (!severity) throw new CustomError('Bleed severity required', 400)
+
+  const bleed = await prisma.bleed.findUnique({ where: { id: bleedId } })
+  if (!bleed) throw new CustomError('Bleed not found', 404)
+  const eventId = bleed.eventId
+
+  const updatedEvent = await updateEventWithChild(userId, eventId, 'Bleed', {
+    location,
+    severity,
+    note,
+  })
+
+  res.status(200).json({
+    success: true,
+    message: 'Bleed successfully udpated',
+    data: updatedEvent,
+  })
+})
+
 module.exports = {
   createBleed,
+  updateBleed,
 }
