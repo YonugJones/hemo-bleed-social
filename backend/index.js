@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/auth')
 const infusionRouter = require('./routes/infusion')
 const bleedRouter = require('./routes/bleed')
+const activityRouter = require('./routes/activity')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRouter)
 app.use('/events/infusion', infusionRouter)
 app.use('/events/bleed', bleedRouter)
+app.use('/events/activity', activityRouter)
 
 // Global Error Handler
 app.use(errorHandler)
