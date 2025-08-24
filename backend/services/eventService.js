@@ -130,8 +130,13 @@ const deleteEventWithChild = asyncHandler(async (userId, eventId) => {
 const getUserEvents = asyncHandler(async (userId) => {
   if (!userId) throw new CustomError('User ID is required', 400)
 
+  const whereClause = { userId }
+  if (type) {
+    whereClause.type = type
+  }
+
   return await prisma.event.findMany({
-    where: { userId },
+    where: whereClause,
     include: {
       bleed: true,
       infusion: true,
